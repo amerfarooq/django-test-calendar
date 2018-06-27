@@ -1,0 +1,123 @@
+1- Created an app called Appointments via the following command:
+	python manage.py startapp appointment
+
+
+APPOINTMENT
+	-PatientName
+	-Date
+	-Time
+	-Doctor
+
+To create the preceeding database table, added an Appointment class to the app/models.py
+	
+
+class Appointment(models.Model):
+    patient_name = models.CharField(max_length=128)
+    doc_name = models.CharField(max_length=128)
+    appt_date = models.DateField()	
+    appt_time = models.TimeField()	
+
+
+2-
+Entered
+	python manage.py makemigrations 
+
+to register changes to the app models, followed by: 
+	python manage.py migrate
+
+to apply the changes.
+
+
+3-
+Registered the Appointment model for it to show up in the admin interface. This was done by going to the admin.py file and adding:
+	from .models import Appointment
+	admin.site.register(Appointment)
+
+
+4- Now any Appointment object created via the admin interface will show up as 'Appointment object'. To make it more
+   reader friendly, defined a function inside Appointment class:
+
+   def __str__(self):
+        return f'{self.patient_name} {self.doc_name} {self.appt_date}'
+
+   Now, instead of 'Appointment object' we will see 'Patient Name Doctor Name Date'
+
+
+6- Added main URL for appointments in Calendar/urls.py
+
+7- Created a urls.py file in Calendar/appointments to include all the urls related to appointments. Addeed a create and display url pattern here.
+
+8- Added the new appointments app to Calendar/settings.py, inside the Installed_Apps list
+
+9- Made an appointments.html, create.html, display.html and mapped their urls in appointments/urls.py
+
+10- Added buttons to appointments.html
+
+11- Mapped buttons to their respective pages
+
+12- Imported all Appointment objects in appointments/views.py and passed them in a dictionary to display.html which shows them in a list.
+
+13- Created forms.py in appointments and created a AppointmentForm class inside it. This class corresponds to the Appointment model.
+    
+14- Created the view createAppointment to capture input and use it to create an Appointment object which is saved into the database.
+
+15- Added HttpResponseRedirect to redirect to appointments/home.html after user submits information about new appointment.
+
+16- Installed widget-tweaks to be able to use Bootstrap with Django forms. This allows me to add custom HTML tags directly in the template
+    (appointments/create.html) instead of adding the attributes inside forms.py
+
+17- Created a form with Boostrap that handles input and also validates user input in create.html
+
+18- Created col-centered and btn-centered CSS styles to center forms and buttons
+
+19- Installed django_extensions and followed this tutorial: http://django-extensions.readthedocs.io/en/latest/runscript.html to
+    create and run a script to delete all Appointment objects
+
+20- Populated 'Select Doctor' field in create.html with objects from the Doctor model. This was done by adding a doc_name
+    foreign key inside the Appointment model. Then, inside forms.py and the AppointmentForm class, the following line was added:
+
+		doc_name = forms.ModelChoiceField(label = 'Select Doctor', queryset=Doctor.objects.all())
+
+21- Added validation methods for the form. In forms.py, defined a clean_appt_date(self) in the AppointmentForm class to ensure appointment could not be set
+    at a date earlier than the current date. Similarly, the clean(self) method in AppointmentForm was defined to ensure a two appointments could not
+    overlap by comparing their dates and times.
+
+
+22- Added extra validation steps in the clean method of the AppointmentForm class to ensure appointments (assuming each appointment to be 30m long) cannot be
+    booked in the same time range i.e an appointment can't be booked at 4:30 if one is already booked at 4:15. This is accomplished by comparing the time
+    given by user against the time range of all currently booked appointments. Assuming x to be a current appointment and y to the be the new appointment time,
+    y can only be booked if it is not in the range: x-30min, x, x+30min.
+
+23- Defined method clean_patient_name(self) in appointments/forms.py to ensure patient name has no numbers inside it using pythons isalpha() function.
+	
+24- Imported from django.contrib.auth import views as auth_view in main urls.py file 
+
+	Added two URLs in main urls.py to accomodate login and logout functionality:
+	
+		path('login', auth_view.login, name = 'login' ),
+        	path('logout', auth_view.logout, name = 'logout'),
+
+25- When opening the /login page, Django looks inside Calendar/appointments/templates/registration/login.html. So the registration folder and the login.html file are created.
+
+26- Edited login.html to add login form. The same form code from create.html was used.
+
+27- Created a new application called home to handle homepage and login logout functionality. Registered app in settings and created home.html which displays the login and sign-up buttons.
+
+28- Created a homepage called home.html which displays 2 buttons: Login and Sign-up. Upon clikcing, buttons redirect to respective pages.
+
+29- Edited login.html to manually unpack login page form fields.
+
+30- Added AUTH_USER_MODEL = 'home.User 'to settings.py since we are using this in place of the default User model. 
+
+31- Added a userType choice field in the User model in home/models.py
+
+32- Followed this: https://stackoverflow.com/questions/44651760/django-db-migrations-exceptions-inconsistentmigrationhistory to get rid of errors when trying to migrate.
+
+33- Followed this: https://stackoverflow.com/questions/15012235/using-django-auth-useradmin-for-a-custom-user-model to ensure the custom User Model wit the userType fields
+    shows up in the admin panel in django.
+
+34- To remove database inconsistencies, deleted all files inside all migrations folder excluding init.py. Also deleted db.sqlite3 file. Then ran makemigrations and python manage.py migrate     --run-syncdb which ended up removing the errors.
+
+35- Deployed app on pythonanywhere using https://www.youtube.com/watch?v=Y4c4ickks2A tutorial
+
+36- App can be updated by making changes to github directory and then running git pull in the virtual environment and then reloading the app.
