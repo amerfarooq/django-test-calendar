@@ -1,0 +1,71 @@
+{% extends "home/base.html" %}
+{% load widget_tweaks %}    
+
+{% block pagetitle %}
+    <title>Login</title>
+{% endblock%}
+
+
+{% block pageHeading %}
+    <h3 align="center">Login Portal</h3>
+{% endblock %}
+
+
+{% block content %}
+<br><br>
+<form method="POST" >
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+        <div class="btn-centered alert alert-danger" role="alert">
+            {% for error in form.non_field_errors %}
+            {{ error }}
+            {% endfor %}
+        </div>
+    {% endif %}
+    <br><br>
+
+
+    {% for field in form.visible_fields %}
+        <div class="col-lg-4 col-centered">                              <!-- This div resizes the width of the form fields-->
+            <div class="form-group">
+                
+                {{ field.label_tag }}
+
+                {% if form.is_bound %}
+                    {% if field.errors %}
+                        {% render_field field class="form-control is-invalid" %}      <!-- render_field allows us to add style, class  -->                                           
+                            {% for error in field.errors %}                             <!--  directly here  -->              
+                                <div class="invalid-feedback">
+                                    {{ error }}
+                                </div>
+                            {% endfor %}
+                    {% else %}
+                        {% render_field field class="form-control is-valid" %}
+                    {% endif %} 
+                
+                {% else %}        
+                    {% render_field field class="form-control" %}
+                {% endif %}
+
+                {% if field.help_text %}
+                    <small class="form-text text-muted">{{ field.help_text }}</small>
+                {% endif %}
+            
+            </div>
+        </div>
+    {% endfor %}
+
+    
+    <br>
+    <div class="btn-centered">
+        <button type="submit" class="btn btn-primary">Login</button>
+    </div>
+
+    <br><br>
+</form>
+
+<!-- <div class="btn-centered">
+    <a href="/register">New user? Register!</a>
+</div> -->
+{% endblock %}

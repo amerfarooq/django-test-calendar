@@ -1,0 +1,16 @@
+{% extends "home/base.html" %}
+
+{% block pageTitle %}
+    <title>Home</title>
+{% endblock %}
+
+
+{% block content %}
+    <div class="text-center">
+        <br><br><br><br><br><br><br>
+        <h4>Welcome to the hospital system!</h4>
+        <br>
+        <a href="{% url 'login' %}" class="btn btn-primary btn-lg btn-outline-primary pull-left">Login</a>
+        <a href="/appointments/create" class="btn btn-primary btn-lg btn-outline-primary pull-left">Sign-up</a> 
+    </div> 
+{% endblock %}

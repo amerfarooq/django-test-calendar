@@ -1,0 +1,33 @@
+
+html,
+body {
+    height: 100%;
+    width: 100%;
+    display: grid;
+}
+
+.col-centered{
+    margin: 0 auto;
+    float: none;
+}
+
+.btn-centered{ 
+    text-align: center; 
+}
+
+.error input, .error select {
+    border: 2px red solid;
+}
+
+#page-center {
+    height: 200px;
+    width: 400px;
+    background: black;
+
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -100px;
+    margin-left: -200px;
+}
+
